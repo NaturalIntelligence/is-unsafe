@@ -36,14 +36,14 @@ describe('isUnsafe — input validation', () => {
   });
 
   it('returns false for empty string in any context', () => {
-    for (const ctx of VALID_CONTEXTS) {
+    for (const ctx in VALID_CONTEXTS) {
       expect(isUnsafe('', ctx)).toBe(false);
     }
   });
 
   it('returns false for benign strings in all built-in contexts', () => {
     const safe = 'Hello, world! This is a perfectly normal sentence.';
-    for (const ctx of VALID_CONTEXTS) {
+    for (const ctx in VALID_CONTEXTS) {
       expect(isUnsafe(safe, ctx)).toBe(false, `expected safe in context ${ctx}`);
     }
   });
@@ -156,25 +156,24 @@ describe('allUnsafe', () => {
 
 describe('VALID_CONTEXTS export', () => {
   it('exports an array of string context names', () => {
-    expect(Array.isArray(VALID_CONTEXTS)).toBe(true);
-    for (const c of VALID_CONTEXTS) {
+    for (const c in VALID_CONTEXTS) {
       expect(typeof c).toBe('string');
     }
   });
 
   it('includes all built-in contexts', () => {
-    expect(VALID_CONTEXTS).toContain('HTML');
-    expect(VALID_CONTEXTS).toContain('XML');
-    expect(VALID_CONTEXTS).toContain('SVG');
-    expect(VALID_CONTEXTS).toContain('SQL');
-    expect(VALID_CONTEXTS).toContain('SQL-STRICT');
-    expect(VALID_CONTEXTS).toContain('SHELL');
-    expect(VALID_CONTEXTS).toContain('REDOS');
-    expect(VALID_CONTEXTS).toContain('NOSQL');
-    expect(VALID_CONTEXTS).toContain('LOG');
+    expect(VALID_CONTEXTS.HTML).toContain('HTML');
+    expect(VALID_CONTEXTS.XML).toContain('XML');
+    expect(VALID_CONTEXTS.SVG).toContain('SVG');
+    expect(VALID_CONTEXTS.SQL).toContain('SQL');
+    expect(VALID_CONTEXTS["SQL-STRICT"]).toContain('SQL-STRICT');
+    expect(VALID_CONTEXTS.SHELL).toContain('SHELL');
+    expect(VALID_CONTEXTS.REDOS).toContain('REDOS');
+    expect(VALID_CONTEXTS.NOSQL).toContain('NOSQL');
+    expect(VALID_CONTEXTS.LOG).toContain('LOG');
   });
 
   it('has exactly the expected number of contexts', () => {
-    expect(VALID_CONTEXTS.length).toBe(9);
+    expect(Object.keys(VALID_CONTEXTS).length).toBe(9);
   });
 });

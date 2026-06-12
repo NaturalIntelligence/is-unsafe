@@ -119,13 +119,23 @@ const findings = allUnsafe('<script onload="x"></script>', 'HTML');
 
 ---
 
-### `VALID_CONTEXTS` → `string[]`
+### `VALID_CONTEXTS`
 
 Exported array of all built-in context names.
 
 ```js
 import { VALID_CONTEXTS } from 'is-unsafe';
-// ['HTML', 'XML', 'SVG', 'SQL', 'SQL-STRICT', 'SHELL', 'REDOS', 'NOSQL', 'LOG']
+// {
+//     readonly HTML: "HTML";
+//     readonly XML: "XML";
+//     readonly SVG: "SVG";
+//     readonly SQL: "SQL";
+//     readonly "SQL-STRICT": "SQL-STRICT";
+//     readonly SHELL: "SHELL";
+//     readonly REDOS: "REDOS";
+//     readonly NOSQL: "NOSQL";
+//     readonly LOG: "LOG";
+// }
 ```
 
 ---

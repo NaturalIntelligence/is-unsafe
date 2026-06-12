@@ -46,7 +46,7 @@ function assertContext(context) {
   if (typeof context === 'string') {
     if (!CONTEXT_REGISTRY[context]) {
       throw new TypeError(
-        `is-unsafe: unknown context "${context}". Valid contexts: ${VALID_CONTEXTS.join(', ')}`
+        `is-unsafe: unknown context "${context}". Valid contexts: ${Object.keys(VALID_CONTEXTS).join(', ')}`
       );
     }
     return;
@@ -59,7 +59,7 @@ function assertContext(context) {
     for (const c of context) {
       if (typeof c !== 'string' || !CONTEXT_REGISTRY[c]) {
         throw new TypeError(
-          `is-unsafe: unknown context "${c}" in array. Valid contexts: ${VALID_CONTEXTS.join(', ')}`
+          `is-unsafe: unknown context "${c}" in array. Valid contexts: ${Object.keys(VALID_CONTEXTS).join(', ')}`
         );
       }
     }

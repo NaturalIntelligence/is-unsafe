@@ -11,30 +11,35 @@
  *   REDOS      — detects ReDoS-prone patterns when string will be compiled as RegExp
  */
 
-import HTML_PATTERNS       from './contexts/html.js';
-import XML_PATTERNS        from './contexts/xml.js';
-import SVG_PATTERNS        from './contexts/svg.js';
-import SQL_PATTERNS        from './contexts/sql.js';
+import HTML_PATTERNS from './contexts/html.js';
+import XML_PATTERNS from './contexts/xml.js';
+import SVG_PATTERNS from './contexts/svg.js';
+import SQL_PATTERNS from './contexts/sql.js';
 import SQL_STRICT_PATTERNS from './contexts/sql-strict.js';
-import SHELL_PATTERNS      from './contexts/shell.js';
-import REDOS_PATTERNS      from './contexts/redos.js';
-import NOSQL_PATTERNS      from './contexts/nosql.js';
-import LOG_PATTERNS        from './contexts/log.js';
+import SHELL_PATTERNS from './contexts/shell.js';
+import REDOS_PATTERNS from './contexts/redos.js';
+import NOSQL_PATTERNS from './contexts/nosql.js';
+import LOG_PATTERNS from './contexts/log.js';
 
 /** @type {Record<string, Array<{id: string, description: string, pattern: RegExp}>>} */
 const CONTEXT_REGISTRY = {
-  HTML:         HTML_PATTERNS,
-  XML:          XML_PATTERNS,
-  SVG:          SVG_PATTERNS,
-  SQL:          SQL_PATTERNS,
+  HTML: HTML_PATTERNS,
+  XML: XML_PATTERNS,
+  SVG: SVG_PATTERNS,
+  SQL: SQL_PATTERNS,
   'SQL-STRICT': SQL_STRICT_PATTERNS,
-  SHELL:        SHELL_PATTERNS,
-  REDOS:        REDOS_PATTERNS,
-  NOSQL:        NOSQL_PATTERNS,
-  LOG:          LOG_PATTERNS,
+  SHELL: SHELL_PATTERNS,
+  REDOS: REDOS_PATTERNS,
+  NOSQL: NOSQL_PATTERNS,
+  LOG: LOG_PATTERNS,
 };
 
 export default CONTEXT_REGISTRY;
 
-/** All valid context names — useful for validation and tooling. */
-export const VALID_CONTEXTS = Object.keys(CONTEXT_REGISTRY);
+/**
+ * Enum of valid context names — e.g. `VALID_CONTEXTS.HTML === 'HTML'`.
+ * @type {Record<string, string>}
+ */
+export const VALID_CONTEXTS = Object.freeze(
+  Object.fromEntries(Object.keys(CONTEXT_REGISTRY).map((k) => [k, k]))
+);
