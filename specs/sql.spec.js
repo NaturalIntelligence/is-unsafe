@@ -6,10 +6,10 @@
  * and obfuscation techniques. All patterns are ReDoS-safe by design.
  */
 
-import { isUnsafe } from '../src/index.js';
+import { isUnsafe, SQL } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'SQL')).toBe(true,  `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'SQL')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, SQL)).toBe(true,  `expected UNSAFE: ${v}`);
+const safe   = (v) => expect(isUnsafe(v, SQL)).toBe(false, `expected SAFE:   ${v}`);
 
 describe('SQL context — comment sequences', () => {
   it('flags /* block comment open (base SQL)', () => {

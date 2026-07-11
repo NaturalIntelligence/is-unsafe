@@ -6,10 +6,10 @@
  * backtracking (ReDoS — Regular Expression Denial of Service).
  */
 
-import { isUnsafe } from '../src/index.js';
+import { isUnsafe, REDOS } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'REDOS')).toBe(true,  `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'REDOS')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, REDOS)).toBe(true,  `expected UNSAFE: ${v}`);
+const safe   = (v) => expect(isUnsafe(v, REDOS)).toBe(false, `expected SAFE:   ${v}`);
 
 describe('REDOS context — nested quantifiers (classic ReDoS forms)', () => {
   it('flags (a+)+ pattern', () => {

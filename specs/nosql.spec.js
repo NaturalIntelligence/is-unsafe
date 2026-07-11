@@ -5,10 +5,10 @@
  * Covers MongoDB query operator injection and prototype pollution.
  */
 
-import { isUnsafe, whyUnsafe } from '../src/index.js';
+import { isUnsafe, whyUnsafe, NOSQL } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'NOSQL')).toBe(true,  `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'NOSQL')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, NOSQL)).toBe(true,  `expected UNSAFE: ${v}`);
+const safe   = (v) => expect(isUnsafe(v, NOSQL)).toBe(false, `expected SAFE:   ${v}`);
 
 // ─── MongoDB $ operator injection ───────────────────────────────────────────
 
@@ -178,14 +178,14 @@ describe('NOSQL context — safe strings', () => {
 
 describe('NOSQL context — whyUnsafe reporting', () => {
   it('identifies the specific operator rule that fired', () => {
-    const result = whyUnsafe('{"$ne": null}', 'NOSQL');
+    const result = whyUnsafe('{"$ne": null}', NOSQL);
     expect(result).not.toBeNull();
     expect(result.id).toBe('nosql-ne-operator');
     expect(result.context).toBe('NOSQL');
   });
 
   it('identifies prototype pollution rule', () => {
-    const result = whyUnsafe('__proto__', 'NOSQL');
+    const result = whyUnsafe('__proto__', NOSQL);
     expect(result).not.toBeNull();
     expect(result.id).toBe('nosql-proto-pollution');
   });

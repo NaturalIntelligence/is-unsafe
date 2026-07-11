@@ -4,10 +4,10 @@
  * Tests for the SHELL injection and path traversal context patterns.
  */
 
-import { isUnsafe } from '../src/index.js';
+import { isUnsafe, SHELL } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'SHELL')).toBe(true,  `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'SHELL')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, SHELL)).toBe(true,  `expected UNSAFE: ${v}`);
+const safe   = (v) => expect(isUnsafe(v, SHELL)).toBe(false, `expected SAFE:   ${v}`);
 
 describe('SHELL context — path traversal', () => {
   it('flags Unix ../ traversal', () => {

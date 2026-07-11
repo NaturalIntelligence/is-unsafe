@@ -12,12 +12,12 @@
  * safe in SQL (high-precision) but flagged in SQL-STRICT (exhaustive).
  */
 
-import { isUnsafe, allUnsafe } from '../src/index.js';
+import { isUnsafe, allUnsafe, SQL, SQL_STRICT } from '../src/index.js';
 
-const strictUnsafe = (v) => expect(isUnsafe(v, 'SQL-STRICT')).toBe(true,  `expected UNSAFE in SQL-STRICT: ${v}`);
-const strictSafe   = (v) => expect(isUnsafe(v, 'SQL-STRICT')).toBe(false, `expected SAFE in SQL-STRICT:   ${v}`);
-const baseUnsafe   = (v) => expect(isUnsafe(v, 'SQL')).toBe(true,  `expected UNSAFE in SQL: ${v}`);
-const baseSafe     = (v) => expect(isUnsafe(v, 'SQL')).toBe(false, `expected SAFE in SQL:   ${v}`);
+const strictUnsafe = (v) => expect(isUnsafe(v, SQL_STRICT)).toBe(true,  `expected UNSAFE in SQL-STRICT: ${v}`);
+const strictSafe   = (v) => expect(isUnsafe(v, SQL_STRICT)).toBe(false, `expected SAFE in SQL-STRICT:   ${v}`);
+const baseUnsafe   = (v) => expect(isUnsafe(v, SQL)).toBe(true,  `expected UNSAFE in SQL: ${v}`);
+const baseSafe     = (v) => expect(isUnsafe(v, SQL)).toBe(false, `expected SAFE in SQL:   ${v}`);
 
 // ─── Rules shared with base SQL ─────────────────────────────────────────────
 

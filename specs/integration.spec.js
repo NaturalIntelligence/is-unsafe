@@ -5,7 +5,7 @@
  * including the motivating use-case from @nodable/entities / fast-xml-parser.
  */
 
-import { isUnsafe, whyUnsafe, allUnsafe } from '../src/index.js';
+import { isUnsafe, whyUnsafe, allUnsafe, HTML, XML, SQL, SHELL, REDOS, SVG } from '../src/index.js';
 
 // ─── Scenario 1: FXP / @nodable/entities postCheck ─────────────────────────
 
@@ -19,12 +19,12 @@ describe('Integration: FXP entity resolution postCheck', () => {
   const xssEntity = '</script><script>alert(document.domain)</script><x y="';
 
   it('detects the XSS entity value as unsafe in HTML context', () => {
-    expect(isUnsafe(xssEntity, 'HTML')).toBe(true);
+    expect(isUnsafe(xssEntity, HTML)).toBe(true);
   });
 
   it('detects the XSS entity value as unsafe in XML context (script close is XML concern too)', () => {
     // Not all XML contexts fire, but HTML fires so mixed context check is meaningful
-    expect(isUnsafe(xssEntity, ['HTML', 'XML'])).toBe(true);
+    expect(isUnsafe(xssEntity, [HTML, XML])).toBe(true);
   });
 
   it('passes normal entity values', () => {
@@ -37,13 +37,13 @@ describe('Integration: FXP entity resolution postCheck', () => {
       '5 < 10',
     ];
     for (const v of safeEntities) {
-      expect(isUnsafe(v, 'HTML')).toBe(false, `safe entity should pass: ${v}`);
+      expect(isUnsafe(v, HTML)).toBe(false, `safe entity should pass: ${v}`);
     }
   });
 
   it('simulates the postCheck callback pattern', () => {
     function postCheck(resolved, original) {
-      if (isUnsafe(resolved, 'HTML')) {
+      if (isUnsafe(resolved, HTML)) {
         return original; // keep literal entity reference unchanged
       }
       return resolved;
@@ -54,7 +54,7 @@ describe('Integration: FXP entity resolution postCheck', () => {
   });
 
   it('provides diagnostic info via whyUnsafe for logging', () => {
-    const result = whyUnsafe(xssEntity, 'HTML');
+    const result = whyUnsafe(xssEntity, HTML);
     expect(result).not.toBeNull();
     expect(result.context).toBe('HTML');
     expect(typeof result.id).toBe('string');
@@ -73,20 +73,20 @@ describe('Integration: form field sanitisation guard', () => {
   }
 
   it('accepts normal name input', () => {
-    expect(() => validateField('John Smith', ['HTML', 'SQL'])).not.toThrow();
+    expect(() => validateField('John Smith', [HTML, SQL])).not.toThrow();
   });
 
   it('rejects XSS payload in name field', () => {
-    expect(() => validateField('<script>alert(1)</script>', ['HTML', 'SQL'])).toThrow();
+    expect(() => validateField('<script>alert(1)</script>', [HTML, SQL])).toThrow();
   });
 
   it('rejects SQL injection in search field', () => {
-    expect(() => validateField("' OR 1=1--", ['HTML', 'SQL'])).toThrow();
+    expect(() => validateField("' OR 1=1--", [HTML, SQL])).toThrow();
   });
 
   it('accepts numeric input', () => {
-    expect(() => validateField('42', ['HTML', 'SQL'])).not.toThrow();
-    expect(() => validateField('3.14', ['HTML', 'SQL'])).not.toThrow();
+    expect(() => validateField('42', [HTML, SQL])).not.toThrow();
+    expect(() => validateField('3.14', [HTML, SQL])).not.toThrow();
   });
 });
 
@@ -94,7 +94,7 @@ describe('Integration: form field sanitisation guard', () => {
 
 describe('Integration: file upload path guard', () => {
   function safePath(filename) {
-    return !isUnsafe(filename, 'SHELL');
+    return !isUnsafe(filename, SHELL);
   }
 
   it('allows normal filenames', () => {
@@ -123,21 +123,21 @@ describe('Integration: file upload path guard', () => {
 
 describe('Integration: SVG attribute value guard', () => {
   it('correctly classifies safe SVG attribute values', () => {
-    expect(isUnsafe('#ff0000', 'SVG')).toBe(false);            // fill value
-    expect(isUnsafe('rotate(45)', 'SVG')).toBe(false);         // transform value
-    expect(isUnsafe('0 0 100 100', 'SVG')).toBe(false);        // viewBox value
+    expect(isUnsafe('#ff0000', SVG)).toBe(false);            // fill value
+    expect(isUnsafe('rotate(45)', SVG)).toBe(false);         // transform value
+    expect(isUnsafe('0 0 100 100', SVG)).toBe(false);        // viewBox value
   });
 
   it('correctly classifies unsafe SVG attribute strings', () => {
     // isUnsafe checks the string that will appear in the document.
     // An unsafe SVG attribute appears in the document as: attrname="value"
     // The xlink:href with javascript: value appears as the full attribute expression
-    expect(isUnsafe('xlink:href="javascript:alert(1)"', 'SVG')).toBe(true);
-    expect(isUnsafe('onload="alert(document.domain)"', 'SVG')).toBe(true);
+    expect(isUnsafe('xlink:href="javascript:alert(1)"', SVG)).toBe(true);
+    expect(isUnsafe('onload="alert(document.domain)"', SVG)).toBe(true);
   });
 
   it('passes internal fragment href reference', () => {
-    expect(isUnsafe('<use href="#local-anchor">', 'SVG')).toBe(false);
+    expect(isUnsafe('<use href="#local-anchor">', SVG)).toBe(false);
   });
 });
 
@@ -145,8 +145,8 @@ describe('Integration: SVG attribute value guard', () => {
 
 describe('Integration: user-supplied regex guard', () => {
   function compileUserRegex(pattern) {
-    if (isUnsafe(pattern, 'REDOS')) {
-      const detail = whyUnsafe(pattern, 'REDOS');
+    if (isUnsafe(pattern, REDOS)) {
+      const detail = whyUnsafe(pattern, REDOS);
       throw new Error(`ReDoS risk detected (${detail.id}): ${detail.description}`);
     }
     return new RegExp(pattern);
@@ -168,7 +168,7 @@ describe('Integration: user-supplied regex guard', () => {
 describe('Integration: allUnsafe for audit reporting', () => {
   it('returns all matching rules for a compound payload', () => {
     const payload = '<script onload="alert(1)">javascript:void</script>';
-    const findings = allUnsafe(payload, 'HTML');
+    const findings = allUnsafe(payload, HTML);
 
     expect(findings.length).toBeGreaterThan(0);
 
@@ -180,8 +180,8 @@ describe('Integration: allUnsafe for audit reporting', () => {
   });
 
   it('returns empty array for safe input', () => {
-    expect(allUnsafe('hello world', 'HTML')).toEqual([]);
-    expect(allUnsafe('john@example.com', ['HTML', 'SQL', 'SHELL'])).toEqual([]);
+    expect(allUnsafe('hello world', HTML)).toEqual([]);
+    expect(allUnsafe('john@example.com', [HTML, SQL, SHELL])).toEqual([]);
   });
 });
 
@@ -193,7 +193,7 @@ describe('Integration: XML sitemap entity value guard', () => {
    * (no XSS if reflected into a page). Check both.
    */
   function isUrlSafeForSitemap(url) {
-    return !isUnsafe(url, ['HTML', 'XML']);
+    return !isUnsafe(url, [HTML, XML]);
   }
 
   it('passes normal sitemap URLs', () => {

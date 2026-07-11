@@ -6,10 +6,10 @@
  * These tests cover vectors that bypass HTML sanitizers (DOMPurify documented bypasses).
  */
 
-import { isUnsafe } from '../src/index.js';
+import { isUnsafe, SVG } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'SVG')).toBe(true,  `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'SVG')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, SVG)).toBe(true,  `expected UNSAFE: ${v}`);
+const safe   = (v) => expect(isUnsafe(v, SVG)).toBe(false, `expected SAFE:   ${v}`);
 
 describe('SVG context — <script> element', () => {
   it('flags <script element in SVG', () => {

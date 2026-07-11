@@ -6,10 +6,10 @@
  * and parser-level attacks distinct from HTML XSS.
  */
 
-import { isUnsafe } from '../src/index.js';
+import { isUnsafe, XML } from '../src/index.js';
 
-const unsafe = (v) => expect(isUnsafe(v, 'XML')).toBe(true,  `expected UNSAFE: ${v}`);
-const safe   = (v) => expect(isUnsafe(v, 'XML')).toBe(false, `expected SAFE:   ${v}`);
+const unsafe = (v) => expect(isUnsafe(v, XML)).toBe(true,  `expected UNSAFE: ${v}`);
+const safe   = (v) => expect(isUnsafe(v, XML)).toBe(false, `expected SAFE:   ${v}`);
 
 describe('XML context — CDATA injection', () => {
   it('flags <![CDATA[ opening sequence', () => {
